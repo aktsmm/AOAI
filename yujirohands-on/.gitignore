@@ -26,6 +26,7 @@
 
 # local env files
 copy.env*.local
+copy.env.local
 
 # vercel
 #.vercel
