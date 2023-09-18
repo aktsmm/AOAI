@@ -1,0 +1,55 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+jobs:
+- job: BuildAndDeploy
+  steps:
+  - script: echo Hello, world!
+    displayName: 'Run a one-line script'
+
+  - script: |
+      echo Add other tasks to build, test, and deploy your project.
+      echo See https://aka.ms/yaml
+    displayName: 'Run a multi-line script'
+
+  # install node module and buid
+  - script: |
+      echo "Installing dependencies"
+      yarn install --cwd $(Agent.BuildDirectory)/s/YourProjectName/apps/portal
+    displayName: 'Install'
+    env:
+      GIT_TOKEN: $(BIT_TOKEN)
+      BIT_TOKEN: $(GIT_TOKEN)
+
+  - script: |
+      echo "Building"
+      yarn --cwd $(Agent.BuildDirectory)/s/YourProjectName/apps/portal run build
+    displayName: 'Build'
+    env:
+      GIT_TOKEN: $(BIT_TOKEN)
+      BIT_TOKEN: $(GIT_TOKEN)
+
+  # deploy Azure Static Web Apps
+  - task: AzureStaticWebApp@0
+    inputs:
+        azure_static_web_apps_api_token: $(deployment_token)
+        app_location: '/'
+        api_location: ''
+        output_location: '.next'
+        api_build_command: 'rm -rf ./node_modules/@next/swc-* && rm -rf ./.next/cache'
+        skip_app_build: true
+    env:
+        AZURE_OPENAI_ENDPOINT: $(AZURE_OPENAI_ENDPOINT)
+        AZURE_OPENAI_API_KEY: $(AZURE_OPENAI_API_KEY)
+        AZURE_OPENAI_DEPLOYMENT_ID: $(AZURE_OPENAI_DEPLOYMENT_ID)
+        CUSTOM_BUILD_COMMAND: "chown -R \"$(whoami)\" $SOURCE_DIR && npm install --unsafe-perm && npm run build && npm run build:azure && apt-get install -y apt-utils"
+
+  # remove node_modules
+
+  - script: |
+      echo "Removing node_modules directory"
+      rm -rfv $(Agent.BuildDirectory)/s/YourProjectName/apps/portal/node_modules
+    displayName: 'Remove node_modules'
