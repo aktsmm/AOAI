@@ -1,6 +1,7 @@
 下記のAOAOIハンズオンで利用したリポジトリ。
 https://qiita.com/fe_js_engineer/items/4c11827906d38051ae51
 下記のようなbotができる。
+https://ashy-meadow-05e3ae000.3.azurestaticapps.net/
 ![2023-09-18_22h18_54](https://github.com/aktsmm/AOAI/assets/71251920/aa279832-0465-48b5-a7a9-ea6ee0f68453)
 
 **.env.local は環境に合わせて記述をしてください。**
