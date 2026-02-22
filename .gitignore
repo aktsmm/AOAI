@@ -34,3 +34,8 @@ copy.env.local
 # typescript
 #*.tsbuildinfo
 #next-env.d.ts
+
+# Copilot agent artifacts (keep local in public repos)
+/research/
+/.github/skills/
+/output_sessions/
